@@ -118,27 +118,31 @@ export default {
       }/products/all`;
       // 原本
       // vm.isLoading = true;
-      // 改成
-      vm.$store.state.isLoading = true;
+      // 改成(非正確寫法,先方便理解)
+      // vm.$store.state.isLoading = true;
       // 去改變store/index.js下的state
+      // 在講座118改成正確寫法
+      vm.$store.dispatch("updateLoading", true);
       this.$http.get(url).then(response => {
         vm.products = response.data.products;
         console.log("取得產品列表:", response);
         vm.getUnique();
-        vm.$store.state.isLoading = false;
+        // vm.$store.state.isLoading = false;
+        vm.$store.dispatch("updateLoading", false);
       });
     },
     addtoCart(id, qty = 1) {
       const vm = this;
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
-      vm.$store.state.isLoading = true;
+      // vm.$store.state.isLoading = true;
+      vm.$store.dispatch("updateLoading", true);
       const item = {
         product_id: id,
         qty
       };
-      vm.$store.state.isLoading = true;
       this.$http.post(url, { data: item }).then(response => {
-        vm.$store.state.isLoading = false;
+        // vm.$store.state.isLoading = false;
+        vm.$store.dispatch("updateLoading", false);
         console.log("加入購物車:", response);
       });
     },
