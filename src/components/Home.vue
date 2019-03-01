@@ -90,11 +90,67 @@ export default {
   name: "Home",
   data() {
     return {
-      products: [],
-      searchText: "",
-      categories: []
+      // products: [], // 重複名稱註解掉
+      searchText: ""
+      // categories: [] // 重複名稱註解掉
       // isLoading: false //移到sotre/index.js
     };
+  },
+  methods: {
+    getProducts() {
+      // 在120講座改成下行
+      this.$store.dispatch("getProducts");
+      // 在120講座將以下移到/store/index.js的getProducts()
+      /*
+      const vm = this;
+      const url = `${process.env.APIPATH}/api/${
+        process.env.CUSTOMPATH
+      }/products/all`;
+      // 原本
+      // vm.isLoading = true;
+      // 第一次改成下行(非正確寫法,先方便理解)
+      // vm.$store.state.isLoading = true;
+      // 去改變store/index.js下的state
+      // 在講座118改成正確寫法
+      vm.$store.dispatch("updateLoading", true);
+      this.$http.get(url).then(response => {
+        vm.products = response.data.products;
+        console.log("取得產品列表:", response);
+        vm.getUnique();
+        // vm.$store.state.isLoading = false;
+        vm.$store.dispatch("updateLoading", false);
+      });
+    */
+    },
+    addtoCart(id, qty = 1) {
+      const vm = this;
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
+      // vm.$store.state.isLoading = true;
+      // 改成用vuex,使用dispatch()傳送到store/index.js/actions的updateLoading()
+      vm.$store.dispatch("updateLoading", true);
+      const item = {
+        product_id: id,
+        qty
+      };
+      this.$http.post(url, { data: item }).then(response => {
+        // vm.$store.state.isLoading = false;
+        vm.$store.dispatch("updateLoading", false);
+        console.log("加入購物車:", response);
+      });
+    }
+    // 講座120移到store/index.js的GATEGORIES()
+    /*
+    getUnique() {
+      const vm = this;
+      const categories = new Set();
+      vm.products.forEach(item => {
+        categories.add(item.category);
+      });
+      vm.categories = Array.from(categories);
+    }*/
+  },
+  created() {
+    this.getProducts();
   },
   computed: {
     filterData() {
@@ -108,55 +164,13 @@ export default {
         });
       }
       return this.products;
-    }
-  },
-  methods: {
-    getProducts() {
-      const vm = this;
-      const url = `${process.env.APIPATH}/api/${
-        process.env.CUSTOMPATH
-      }/products/all`;
-      // 原本
-      // vm.isLoading = true;
-      // 改成(非正確寫法,先方便理解)
-      // vm.$store.state.isLoading = true;
-      // 去改變store/index.js下的state
-      // 在講座118改成正確寫法
-      vm.$store.dispatch("updateLoading", true);
-      this.$http.get(url).then(response => {
-        vm.products = response.data.products;
-        console.log("取得產品列表:", response);
-        vm.getUnique();
-        // vm.$store.state.isLoading = false;
-        vm.$store.dispatch("updateLoading", false);
-      });
     },
-    addtoCart(id, qty = 1) {
-      const vm = this;
-      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
-      // vm.$store.state.isLoading = true;
-      vm.$store.dispatch("updateLoading", true);
-      const item = {
-        product_id: id,
-        qty
-      };
-      this.$http.post(url, { data: item }).then(response => {
-        // vm.$store.state.isLoading = false;
-        vm.$store.dispatch("updateLoading", false);
-        console.log("加入購物車:", response);
-      });
+    categories() {
+      return this.$store.state.categories;
     },
-    getUnique() {
-      const vm = this;
-      const categories = new Set();
-      vm.products.forEach(item => {
-        categories.add(item.category);
-      });
-      vm.categories = Array.from(categories);
+    products() {
+      return this.$store.state.products;
     }
-  },
-  created() {
-    this.getProducts();
   }
 };
 </script>
