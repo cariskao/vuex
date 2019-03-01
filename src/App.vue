@@ -9,6 +9,7 @@
       <div class="dropdown ml-auto">
         <button class="btn btn-sm btn-cart" data-toggle="dropdown" data-flip="false">
           <i class="fa fa-shopping-cart text-dark fa-2x" aria-hidden="true"></i>
+          <!-- 在講座121把cart{carts:[]}移到store/index.js的state中,所以在computed中使用cart(){return ...}的方式將store.index.js所獲取的值返回到cart()中,即可使用cart.carts -->
           <span class="badge badge-pill badge-danger">{{cart.carts.length}}</span>
           <span class="sr-only">unread messages</span>
         </button>
@@ -80,21 +81,27 @@ export default {
   name: "App",
   data() {
     return {
+      /*
       cart: {
+        在講座121移到store/index.js,並從computed帶進來
         carts: []
-      }
+      }*/
       // isLoading: false,// 移到store/index.js
     };
   },
   methods: {
     getCart() {
-      const vm = this;
+      this.$store.dispatch("getCart");
+      // 在講座121移到store/index.js
+      // const vm = this;
       // 原本
       // vm.isLoading = true;
       /**
+       * (非正確寫法,先簡單示範用)
       改成從computed的isLoading去獲取到store/index.js下的isLoading,再藉由computed的isLoading()return給
       </Loading>
        */
+      /*
       vm.$store.state.isLoading = true;
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
       this.$http.get(url).then(response => {
@@ -103,9 +110,12 @@ export default {
         }
         vm.$store.state.isLoading = false;
         console.log("取得購物車", response.data.data);
-      });
+      });*/
     },
     removeCart(id) {
+      this.$store.dispatch("removeCart", id);
+      // 在講座121移到store/index.js
+      /*
       const vm = this;
       const url = `${process.env.APIPATH}/api/${
         process.env.CUSTOMPATH
@@ -115,7 +125,7 @@ export default {
         vm.$store.state.isLoading = false;
         vm.getCart();
         console.log("刪除購物車項目", response);
-      });
+      });*/
     }
   },
   computed: {
@@ -123,6 +133,9 @@ export default {
     // 使用isLoading這個名稱是爲了要跟<!-- <Loading :active.sync="isLoading"></Loading> -->做綁定
     isLoading() {
       return this.$store.state.isLoading;
+    },
+    cart() {
+      return this.$store.state.cart;
     }
   },
   created() {

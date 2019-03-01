@@ -123,6 +123,11 @@ export default {
     */
     },
     addtoCart(id, qty = 1) {
+      // this.$store.dispatch("addtoCart", id, qty);
+      // 因爲actions只能被傳遞一個參數,所以我們使用物件的形式來傳遞與接收
+      this.$store.dispatch("addtoCart", { id, qty });
+      // 講座120移到store/index.js的GATEGORIES()
+      /*
       const vm = this;
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
       // vm.$store.state.isLoading = true;
@@ -136,7 +141,7 @@ export default {
         // vm.$store.state.isLoading = false;
         vm.$store.dispatch("updateLoading", false);
         console.log("加入購物車:", response);
-      });
+      });*/
     }
     // 講座120移到store/index.js的GATEGORIES()
     /*

@@ -14,7 +14,10 @@ export default new Vuex.Store({
     // 因Home.vue的getUnique()有宣告vm.products & vm.categories
     products: [],
     categories: [],
-
+    // 將App.vue data中的cart資料移過來
+    cart: {
+      carts: []
+    }
   },
   // 操作行爲:傳給mutations來操作資料狀態
   // 以及執行非同步行爲(ajax、setTimeout)
@@ -39,6 +42,52 @@ export default new Vuex.Store({
         console.log("取得產品列表:", response);
       });
     },
+    getCart(context) {
+      context.commit('LOADING', true)
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
+      axios.get(url).then(response => {
+        if (response.data.data.carts) {
+          // vm.cart = response.data.data; // 原本這行改成下行
+          context.commit('CART', response.data.data)
+        }
+        context.commit('LOADING', false)
+        console.log("取得購物車", response.data.data);
+      });
+    },
+    removeCart(context, id) {
+      const url = `${process.env.APIPATH}/api/${
+        process.env.CUSTOMPATH
+      }/cart/${id}`;
+      context.commit('LOADING', true)
+      axios.delete(url).then(response => {
+        context.commit('LOADING', false)
+        // vm.getCart(); // 原本這行改成下行,重新刷新頁面
+        context.dispatch('getCart') //注意:不是this.$store.dispatch()
+        console.log("刪除購物車項目", response);
+      });
+    },
+    // addtoCart(context, id, qty) {
+    //qty會顯示undefined,因爲actions只能被傳遞一個參數,所以我們使用物件的形式來傳遞與接收
+    addtoCart(context, {
+      id,
+      qty
+    }) {
+      // console.log(context, id, qty);
+      const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
+      context.commit('LOADING', true)
+      const item = {
+        product_id: id,
+        qty
+      };
+      axios.post(url, {
+        data: item
+      }).then(response => {
+        context.commit('LOADING', false)
+        //加入購物車後,刷新上方navbar的購物車數量。注意:不是this.$store.dispatch()
+        context.dispatch('getCart') // 在Home.vue的addtoCart()沒有做這個部分,之前用$bus.$emit()很難做
+        console.log("加入購物車:", response);
+      });
+    }
   },
   // 操作資料狀態(運作資料)
   // 以及執行同步行爲
@@ -60,6 +109,9 @@ export default new Vuex.Store({
       });
       // 將側邊欄的列表資料唯一值存入state.categories
       state.categories = Array.from(categories);
+    },
+    CART(state, payload) {
+      state.cart = payload
     }
   }
 });
