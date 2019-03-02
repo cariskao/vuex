@@ -110,7 +110,9 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["getProducts"]),
+    // 第四改：在講座123的(store/index.js加入modules)跟(store/products.js加入namespaced),所以做以下修正
+    ...mapActions("productsModules", ["getProducts"]),
+    // ...mapActions('productsModules',["getProducts"]),
     // 第三改：在講座122又將整個getProducts()改成mapActions
     // getProducts() {
     // 第二改：在120講座改成下行(但在講座122又改成mapActions)
@@ -140,6 +142,10 @@ export default {
 
     // PS：但是addtoCart()無法使用mapActions,因爲需要傳遞參數
     addtoCart(id, qty = 1) {
+      // 在講座123加入,要證明store/modules下的state是區域變數
+      // console.log("證明爲區域變數", this.$store.state.products); // 顯示undefined
+      // console.log("證明爲區域變數", this.$store.state.productsModules.products); //正解
+
       // this.$store.dispatch("addtoCart", id, qty);
       // 因爲actions只能被傳遞一個參數,所以我們使用物件的形式來傳遞與接收
       this.$store.dispatch("addtoCart", { id, qty });
@@ -214,7 +220,9 @@ export default {
       return this.$store.state.products;
     }*/
     // 並在上方import mapGetters後,使用展開的方式「...」取出來
-    ...mapGetters(["categories", "products"]) // 這樣模板就可使用
+    // ...mapGetters(["categories", "products"])
+    // 在講座123的(store/index.js加入modules)跟(store/products.js加入namespaced),所以做以下修正
+    ...mapGetters("productsModules", ["categories", "products"]) // 這條註解也修正,模板跟script都可使用
   }
 };
 </script>

@@ -93,7 +93,7 @@ export default {
     };
   },
   methods: {
-    ...mapActions(["getCart"]),
+    ...mapActions("cartModules", ["getCart"]),
     // 第三改：在講座122又將整個getProducts()改成mapActions
     // getCart() {
     // this.$store.dispatch("getCart");
@@ -146,7 +146,7 @@ export default {
       return this.$store.state.cart;
     }*/
     // 以上在122講座移到store/index.js的getters:{}
-    ...mapGetters(["isLoading", "cart"]) // 這樣模板就可使用
+    ...mapGetters("cartModules", ["isLoading", "cart"])
   }
 };
 </script>
