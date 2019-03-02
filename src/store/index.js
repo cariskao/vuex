@@ -112,6 +112,25 @@ export default new Vuex.Store({
     },
     CART(state, payload) {
       state.cart = payload
+    },
+  },
+  // 類似computed,可以直接把要呈現在畫面上的computed移過來
+  getters: {
+    // 把Home.vue computed下的categories()跟products()移過來
+    // state爲上方資料狀態的state
+    // return回去到Home.vue的mapGeeters
+    categories(state) {
+      return state.categories;
+    },
+    products(state) {
+      return state.products;
+    },
+    // 把App.vue computed下的isLoading()跟carts()移過來
+    isLoading(state) {
+      return state.isLoading;
+    },
+    cart(state) {
+      return state.cart;
     }
   }
 });

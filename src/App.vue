@@ -1,4 +1,5 @@
 <template>
+  <!-- 上方navbar & 下方footer -->
   <div id="app">
     <nav class="navbar navbar-light bg-light">
       <router-link class="navbar-brand" to="/">
@@ -77,6 +78,8 @@
 </template>
 
 <script>
+// 使用mapGetters方法在vuex中取得getters{}中全部的內容(在講座122加入)
+import { mapGetters, mapActions } from "vuex"; // 去哪兒網也有使用到mapState取得全部的state{}
 export default {
   name: "App",
   data() {
@@ -90,18 +93,20 @@ export default {
     };
   },
   methods: {
-    getCart() {
-      this.$store.dispatch("getCart");
-      // 在講座121移到store/index.js
-      // const vm = this;
-      // 原本
-      // vm.isLoading = true;
-      /**
-       * (非正確寫法,先簡單示範用)
+    ...mapActions(["getCart"]),
+    // 第三改：在講座122又將整個getProducts()改成mapActions
+    // getCart() {
+    // this.$store.dispatch("getCart");
+    // 第二改：在講座121將以下移到store/index.js
+    // const vm = this;
+    // 原始範例的內容
+    // vm.isLoading = true;
+    /**
+       * (第一改：非正確寫法,先簡單示範用)
       改成從computed的isLoading去獲取到store/index.js下的isLoading,再藉由computed的isLoading()return給
       </Loading>
        */
-      /*
+    /*
       vm.$store.state.isLoading = true;
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
       this.$http.get(url).then(response => {
@@ -111,7 +116,7 @@ export default {
         vm.$store.state.isLoading = false;
         console.log("取得購物車", response.data.data);
       });*/
-    },
+    // },
     removeCart(id) {
       this.$store.dispatch("removeCart", id);
       // 在講座121移到store/index.js
@@ -128,18 +133,20 @@ export default {
       });*/
     }
   },
+  created() {
+    this.getCart();
+  },
   computed: {
     // 將store/index.js的state結果讀出來
     // 使用isLoading這個名稱是爲了要跟<!-- <Loading :active.sync="isLoading"></Loading> -->做綁定
-    isLoading() {
+    /*isLoading() {
       return this.$store.state.isLoading;
     },
     cart() {
       return this.$store.state.cart;
-    }
-  },
-  created() {
-    this.getCart();
+    }*/
+    // 以上在122講座移到store/index.js的getters:{}
+    ...mapGetters(["isLoading", "cart"]) // 這樣模板就可使用
   }
 };
 </script>
