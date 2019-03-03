@@ -1,12 +1,12 @@
 import axios from 'axios'
 
 // (講座123從store/index.js拆分二部分,產品部分的state、actions、mutations、getters移過來這裡)
-// state現在是屬於模組區域變數
-// actions, mutations, getters 是屬於全域變數,所以在store內的其它模組不可使用相同名稱,但是可使用namespaced改成區域變數
+// state是屬於模組區域變數
+// actions, mutations, getters 是屬於全域變數,所以在store內的其它模組不可使用相同名稱,但是可使用namespaced改成區域變數比較安全,以避免衝突
 export default {
   namespaced: true, // 將actions, mutations, getters改成模組區域變數
   // 加入此語法可在console提示語法錯誤
-  // strict: true, // 必要再用,挺容易報錯
+  strict: true, // 必要再用,挺容易報錯
   // 資料狀態
   state: {
     // 因Home.vue的getUnique()有宣告vm.products & vm.categories
@@ -23,7 +23,7 @@ export default {
 				process.env.CUSTOMPATH
 			}/products/all`;
       // context.commit('LOADING', true)
-      // 講座123加入root,讓modules知道這個commit是一個全域的LOADING
+      // 講座123加入root,因爲LOADING的mutations是在cart.js中,如果直接發送的話,modules會不認識,所以我們加入root參數讓modules知道這個commit是一個全域的LOADING變數
       context.commit('LOADING', true, {
         root: true
       })
@@ -33,7 +33,7 @@ export default {
         context.commit('PRODUCTS', response.data.products)
         context.commit('GATEGORIES', response.data.products)
         // context.commit('LOADING', false)
-        // 講座123加入root,讓modules知道這個commit是一個全域的LOADING
+        // 講座123加入root,因爲LOADING的mutations是在cart.js中,如果直接發送的話,modules會不認識,所以我們加入root參數讓modules知道這個commit是一個全域的LOADING變數
         context.commit('LOADING', false, {
           root: true
         })

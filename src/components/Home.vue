@@ -111,8 +111,9 @@ export default {
   },
   methods: {
     // 第四改：在講座123的(store/index.js加入modules)跟(store/products.js加入namespaced),所以做以下修正
+    // 加入namespaced 將actions, mutations, getters改成模組區域變數後,需要將Modules名稱寫入
     ...mapActions("productsModules", ["getProducts"]),
-    // ...mapActions('productsModules',["getProducts"]),
+    // ...mapActions(["getProducts"]),
     // 第三改：在講座122又將整個getProducts()改成mapActions
     // getProducts() {
     // 第二改：在120講座改成下行(但在講座122又改成mapActions)
@@ -208,7 +209,7 @@ export default {
           return item.category === vm.searchText;
         });
       }
-      console.log("[filterSearchText-outside]");
+      // console.log("[filterSearchText-outside]");
       return vm.products;
     },
     // 在122講座移到store/index.js的getters:{}
@@ -222,6 +223,7 @@ export default {
     // 並在上方import mapGetters後,使用展開的方式「...」取出來
     // ...mapGetters(["categories", "products"])
     // 在講座123的(store/index.js加入modules)跟(store/products.js加入namespaced),所以做以下修正
+    // 加入namespaced 將actions, mutations, getters改成模組區域變數後,需要將Modules名稱寫入
     ...mapGetters("productsModules", ["categories", "products"]) // 這條註解也修正,模板跟script都可使用
   }
 };

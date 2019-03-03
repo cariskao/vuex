@@ -93,8 +93,11 @@ export default {
     };
   },
   methods: {
+    // 第四改：在講座123的(store/index.js加入modules)跟(store/products.js加入namespaced),所以做以下修正
+    // 加入namespaced 將actions, mutations, getters改成模組區域變數後,需要將Modules名稱寫入
     ...mapActions("cartModules", ["getCart"]),
     // 第三改：在講座122又將整個getProducts()改成mapActions
+    // ...mapActions(["getCart"]),
     // getCart() {
     // this.$store.dispatch("getCart");
     // 第二改：在講座121將以下移到store/index.js
@@ -146,6 +149,7 @@ export default {
       return this.$store.state.cart;
     }*/
     // 以上在122講座移到store/index.js的getters:{}
+    // 加入namespaced 將actions, mutations, getters改成模組區域變數後,需要將Modules名稱寫入
     ...mapGetters("cartModules", ["isLoading", "cart"])
   }
 };
