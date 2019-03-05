@@ -121,7 +121,9 @@ export default {
       });*/
     // },
     removeCart(id) {
-      this.$store.dispatch("removeCart", id);
+      // 講座123加入namespaced 將actions, mutations, getters改成模組區域變數後,需要將Modules名稱寫入
+      this.$store.dispatch("cartModules/removeCart", id); // 發送到actions
+
       // 在講座121移到store/index.js
       /*
       const vm = this;

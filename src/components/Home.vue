@@ -84,6 +84,7 @@
                     >
                       <i class="fa fa-cart-plus" aria-hidden="true"></i> 加到購物車
                     </button>
+                    <!-- {{item.id}} -->
                   </div>
                 </div>
               </div>
@@ -149,7 +150,10 @@ export default {
 
       // this.$store.dispatch("addtoCart", id, qty);
       // 因爲actions只能被傳遞一個參數,所以我們使用物件的形式來傳遞與接收
-      this.$store.dispatch("addtoCart", { id, qty });
+      // this.$store.dispatch("addtoCart", { id, qty });
+      // 講座123加入namespaced 將actions, mutations, getters改成模組區域變數後,需要將Modules名稱寫入。
+      this.$store.dispatch("cartModules/addtoCart", { id, qty }); // 發送到actions
+
       // 講座120移到store/index.js的GATEGORIES()
       /*
       const vm = this;
@@ -197,7 +201,7 @@ export default {
           const results = item.title
             .toLowerCase()
             .includes(vm.searchText.toLowerCase());
-          console.log("searchText", vm.searchText);
+          // console.log("searchText", vm.searchText);
           return results;
         });
       }

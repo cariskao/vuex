@@ -6,7 +6,7 @@ import axios from 'axios'
 export default {
   namespaced: true, // 將actions, mutations, getters改成模組區域變數
   // 加入此語法可在console提示語法錯誤
-  strict: true, // 必要再用,挺容易報錯
+  strict: true,
   // 資料狀態
   state: {
     isLoading: false, //動畫預設停止
@@ -95,11 +95,13 @@ export default {
   },
   // 類似computed,可以直接把要呈現在畫面上的computed移過來
   getters: {
-    // 把Home.vue computed下的categories()跟products()移過來
-    // state爲上方資料狀態的state
-    // return回去到Home.vue的mapGeeters
-    /*
     // 把App.vue computed下的isLoading()跟carts()移過來
+    // state爲上方資料狀態的state
+    /**
+     * 功能說明:
+     * 把actions獲取的json資料透過mutations放入state.isLoading跟state.cart, 再返回到App.vue的mapGeeters, 讓整個Home.vue可以使用。
+     */
+    /*
     isLoading(state) {
       return state.isLoading;
     },

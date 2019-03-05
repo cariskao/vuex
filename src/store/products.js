@@ -6,7 +6,7 @@ import axios from 'axios'
 export default {
   namespaced: true, // 將actions, mutations, getters改成模組區域變數
   // 加入此語法可在console提示語法錯誤
-  strict: true, // 必要再用,挺容易報錯
+  strict: true,
   // 資料狀態
   state: {
     // 因Home.vue的getUnique()有宣告vm.products & vm.categories
@@ -23,7 +23,7 @@ export default {
 				process.env.CUSTOMPATH
 			}/products/all`;
       // context.commit('LOADING', true)
-      // 講座123加入root,因爲LOADING的mutations是在cart.js中,如果直接發送的話,modules會不認識,所以我們加入root參數讓modules知道這個commit是一個全域的LOADING變數
+      // 講座123加入root,因爲LOADING的mutations是在cart.js中(state是屬於模組區域變數),如果直接發送的話,modules會不認識,所以我們加入root參數讓modules知道這個commit是一個全域的LOADING變數
       context.commit('LOADING', true, {
         root: true
       })
@@ -33,7 +33,7 @@ export default {
         context.commit('PRODUCTS', response.data.products)
         context.commit('GATEGORIES', response.data.products)
         // context.commit('LOADING', false)
-        // 講座123加入root,因爲LOADING的mutations是在cart.js中,如果直接發送的話,modules會不認識,所以我們加入root參數讓modules知道這個commit是一個全域的LOADING變數
+        // 講座123加入root,因爲LOADING的mutations是在cart.js中(state是屬於模組區域變數),如果直接發送的話,modules會不認識,所以我們加入root參數讓modules知道這個commit是一個全域的LOADING變數
         context.commit('LOADING', false, {
           root: true
         })
@@ -62,9 +62,12 @@ export default {
   },
   // 類似computed,可以直接把要呈現在畫面上的computed移過來
   getters: {
-    // 把Home.vue computed下的categories()跟products()移過來
+    // 在講座123把Home.vue computed下的categories()跟products()移過來
     // state爲上方資料狀態的state
-    // return回去到Home.vue的mapGeeters
+    /**
+     * 功能說明:
+     * 把actions獲取的json資料透過mutations放入state.categories跟state.products,再返回到Home.vue的mapGeeters,讓整個Home.vue可以使用。
+     */
     /*
     categories(state) {
       return state.categories;
