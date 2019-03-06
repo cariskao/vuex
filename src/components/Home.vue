@@ -151,8 +151,11 @@ export default {
       // this.$store.dispatch("addtoCart", id, qty);
       // 因爲actions只能被傳遞一個參數,所以我們使用物件的形式來傳遞與接收
       // this.$store.dispatch("addtoCart", { id, qty });
-      // 講座123加入namespaced 將actions, mutations, getters改成模組區域變數後,需要將Modules名稱寫入。
-      this.$store.dispatch("cartModules/addtoCart", { id, qty }); // 發送到actions
+
+      // 講座123在products.js跟cart.js加入了namespaced將actions, mutations, getters改成模組區域變數後,就只能傳送到Home.vue自己的actions, mutations, getters,若要傳送到外部檔案,需要寫入Modules名稱。
+      // 這裡要透過dispatch()發送到外部檔案的addtoCart(),所以需要將Modules名稱寫入。
+      this.$store.dispatch("cartModules/addtoCart", { id, qty }); // 透過dispatch()發送到actions
+      // PS:若是發送到外部actions,不用多加上{root:true}。但若要透過commit()發送到外部mutations就要。
 
       // 講座120移到store/index.js的GATEGORIES()
       /*

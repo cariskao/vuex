@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-// (講座123從store/index.js拆分二部分,產品部分的state、actions、mutations、getters移過來這裡)
+// (講座123從store/index.js拆分二部分,購物車部分的state、actions、mutations、getters移過來這裡)
 // state是屬於模組區域變數
 // actions, mutations, getters 是屬於全域變數,所以在store內的其它模組不可使用相同名稱,但是可使用namespaced改成區域變數比較安全,以避免衝突
 export default {
@@ -20,13 +20,15 @@ export default {
   actions: {
     // context:名稱固定。
     // status:名稱可選,從外部透過dispatch()所傳進來。
+    // 在講座120將產品的部分移到GATEGORIES()時,updateLoading()就不用了
+    /*
     updateLoading(context, status) {
       // 使用commit('函數名稱',要傳遞的參數)傳給mutations
       context.commit('LOADING', status)
       // 因爲LOADING的mutations就在這個檔案中,所以不用加入root參數
-    },
+    },*/
     getCart(context) {
-      // 因爲LOADING的mutations就在這個檔案中,所以不用加入root參數
+      // 因爲要傳送的LOADING的mutations就在此檔案,所以不用加上root以及Modules名稱
       context.commit('LOADING', true)
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
       axios.get(url).then(response => {
@@ -34,7 +36,7 @@ export default {
           // vm.cart = response.data.data; // 原本這行改成下行
           context.commit('CART', response.data.data)
         }
-        // 因爲LOADING的mutations就在這個檔案中,所以不用加入root參數
+        // 因爲要傳送的LOADING的mutations就在此檔案,所以不用加上root以及Modules名稱
         context.commit('LOADING', false)
         console.log("取得購物車", response.data.data);
       });
@@ -43,10 +45,10 @@ export default {
       const url = `${process.env.APIPATH}/api/${
         process.env.CUSTOMPATH
       }/cart/${id}`;
-      // 因爲LOADING的mutations就在這個檔案中,所以不用加入root參數
+      // 因爲要傳送的LOADING的mutations就在此檔案,所以不用加上root以及Modules名稱
       context.commit('LOADING', true)
       axios.delete(url).then(response => {
-        // 因爲LOADING的mutations就在這個檔案中,所以不用加入root參數
+        // 因爲要傳送的LOADING的mutations就在此檔案,所以不用加上root以及Modules名稱
         context.commit('LOADING', false)
         // vm.getCart(); // 原本這行改成下行,重新刷新頁面
         context.dispatch('getCart') //注意:不是this.$store.dispatch()
@@ -62,7 +64,7 @@ export default {
       // console.log(context, id, qty);
       const url = `${process.env.APIPATH}/api/${process.env.CUSTOMPATH}/cart`;
 
-      // 因爲LOADING的mutations就在這個檔案中,所以不用加入root參數
+      // 因爲要傳送的LOADING的mutations就在此檔案,所以不用加上root以及Modules名稱
       context.commit('LOADING', true)
       const item = {
         product_id: id,
@@ -71,7 +73,7 @@ export default {
       axios.post(url, {
         data: item
       }).then(response => {
-        // 因爲LOADING的mutations就在這個檔案中,所以不用加入root參數
+        // 因爲要傳送的LOADING的mutations就在此檔案,所以不用加上root以及Modules名稱
         context.commit('LOADING', false)
         //加入購物車後,刷新上方navbar的購物車數量。注意:不是this.$store.dispatch()
         context.dispatch('getCart') // 之前用$bus.$emit()做刷新購物車很難做
@@ -85,7 +87,7 @@ export default {
   mutations: {
     // 官方建議函數名稱全部用大寫
     // state爲上方資料狀態的state
-    // status(payload):名稱可選,由actions所傳進來。
+    // status(payload):名稱可選,由actions透過commit()所傳進來。
     LOADING(state, status) {
       state.isLoading = status
     },

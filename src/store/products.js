@@ -22,21 +22,25 @@ export default {
       const url = `${process.env.APIPATH}/api/${
 				process.env.CUSTOMPATH
 			}/products/all`;
-      // context.commit('LOADING', true)
-      // 講座123加入root,因爲LOADING的mutations是在cart.js中(state是屬於模組區域變數),如果直接發送的話,modules會不認識,所以我們加入root參數讓modules知道這個commit是一個全域的LOADING變數
-      context.commit('LOADING', true, {
+      // context.commit('LOADING', true) // 講座123改成下行
+      // 講座123在products.js跟cart.js加入了namespaced將actions, mutations, getters改成模組區域變數後,就只能傳送到products.js自己的actions, mutations, getters,若要傳送到外部檔案,需要寫入Modules名稱。
+      // 這裡要透過commit()發送到外部檔案的LOADING(),所以需要將Modules名稱寫入,因爲是commit()非dispatch()所以要多加上root參數。
+      context.commit('cartModules/LOADING', true, {
         root: true
-      })
+      }) // 透過commit()發送到mutations
+
       // 在非vue組件下無法直接使用this,所以只能使用傳統axios方式(要先import axios)
       // this.$http.get(url).then(response => {
       axios.get(url).then(response => {
+        // 因爲要傳送的PRODUCTS以及GATEGORIES的mutations就在此檔案,所以不用加上root以及Modules名稱
         context.commit('PRODUCTS', response.data.products)
         context.commit('GATEGORIES', response.data.products)
         // context.commit('LOADING', false)
-        // 講座123加入root,因爲LOADING的mutations是在cart.js中(state是屬於模組區域變數),如果直接發送的話,modules會不認識,所以我們加入root參數讓modules知道這個commit是一個全域的LOADING變數
-        context.commit('LOADING', false, {
+        // 講座123在products.js跟cart.js加入了namespaced將actions, mutations, getters改成模組區域變數後,就只能傳送到products.js自己的actions, mutations, getters,若要傳送到外部檔案,需要寫入Modules名稱。
+        // 這裡要透過commit()發送到外部檔案的LOADING(),所以需要將Modules名稱寫入,因爲是commit()非dispatch()所以要多加上root參數。
+        context.commit('cartModules/LOADING', false, {
           root: true
-        })
+        }) // 透過commit()發送到mutations
         console.log("取得產品列表:", response);
       });
     },
@@ -47,7 +51,7 @@ export default {
   mutations: {
     // 官方建議函數名稱全部用大寫
     // state爲上方資料狀態的state
-    // status(payload):名稱可選,由actions所傳進來。
+    // status(payload):名稱可選,由actions透過commit()所傳進來。
     PRODUCTS(state, payload) {
       state.products = payload
     },
