@@ -24,10 +24,12 @@ export default {
 			}/products/all`;
       // context.commit('LOADING', true) // 講座123改成下行
       // 講座123在products.js跟cart.js加入了namespaced將actions, mutations, getters改成模組區域變數後,就只能傳送到products.js自己的actions, mutations, getters,若要傳送到外部檔案,需要寫入Modules名稱。
-      // 這裡要透過commit()發送到外部檔案的LOADING(),所以需要將Modules名稱寫入,因爲是commit()非dispatch()所以要多加上root參數。
+      // 這裡透過commit()將LOADING發送到外部modules的mutations檔案中,所以需指定要傳到哪個Modules。
+      // root 可以思考為回到頂層,相當於 "絕對路徑"的概念,所以在 products 模組中是需要先回到根層才能進入其他模組。
+      // 而在其他的 Vue 元件中就是直接載入根層的模組,所以可以直接寫上路徑勒。
       context.commit('cartModules/LOADING', true, {
         root: true
-      }) // 透過commit()發送到mutations
+      })
 
       // 在非vue組件下無法直接使用this,所以只能使用傳統axios方式(要先import axios)
       // this.$http.get(url).then(response => {
@@ -37,10 +39,11 @@ export default {
         context.commit('GATEGORIES', response.data.products)
         // context.commit('LOADING', false)
         // 講座123在products.js跟cart.js加入了namespaced將actions, mutations, getters改成模組區域變數後,就只能傳送到products.js自己的actions, mutations, getters,若要傳送到外部檔案,需要寫入Modules名稱。
-        // 這裡要透過commit()發送到外部檔案的LOADING(),所以需要將Modules名稱寫入,因爲是commit()非dispatch()所以要多加上root參數。
+        // root 可以思考為回到頂層,相當於 "絕對路徑"的概念,所以在 products 模組中是需要先回到根層才能進入其他模組。
+        // 而在其他的 Vue 元件中就是直接載入根層的模組,所以可以直接寫上路徑。
         context.commit('cartModules/LOADING', false, {
           root: true
-        }) // 透過commit()發送到mutations
+        })
         console.log("取得產品列表:", response);
       });
     },

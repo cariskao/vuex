@@ -155,7 +155,8 @@ export default {
       // 講座123在products.js跟cart.js加入了namespaced將actions, mutations, getters改成模組區域變數後,就只能傳送到Home.vue自己的actions, mutations, getters,若要傳送到外部檔案,需要寫入Modules名稱。
       // 這裡要透過dispatch()發送到外部檔案的addtoCart(),所以需要將Modules名稱寫入。
       this.$store.dispatch("cartModules/addtoCart", { id, qty }); // 透過dispatch()發送到actions
-      // PS:若是發送到外部actions,不用多加上{root:true}。但若要透過commit()發送到外部mutations就要。
+      // root 可以思考為回到頂層,相當於 "絕對路徑"的概念,所以在 products 模組中是需要先回到根層才能進入其他模組。
+      // 而在其他的 Vue 元件中就是直接載入根層的模組,所以可以直接寫上路徑。
 
       // 講座120移到store/index.js的GATEGORIES()
       /*
