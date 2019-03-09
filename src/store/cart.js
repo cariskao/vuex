@@ -101,7 +101,7 @@ export default {
     // state爲上方資料狀態的state
     /**
      * 功能說明:
-     * 把actions獲取的json資料透過mutations放入state.isLoading跟state.cart, 再返回到App.vue的mapGeeters, 讓整個Home.vue可以使用。
+     * 把actions獲取的json資料透過mutations放入state.isLoading跟state.cart, 再返回到App.vue的mapGeeters, 讓整個App.vue可以使用。
      */
     /*
     isLoading(state) {
