@@ -19,7 +19,7 @@ Vue.component('Loading', Loading);
 new Vue({
   el: '#app',
   router,
-  store,
+  store, // 注意不要放到components中
   components: {
     App,
   },
